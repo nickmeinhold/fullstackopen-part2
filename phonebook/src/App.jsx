@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Persons from "./Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -66,15 +67,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(newFilter.toLowerCase())
-        )
-        .map((person) => (
-          <p key={person.name}>
-            {person.name} {person.number}
-          </p>
-        ))}
+      <Persons persons={persons} filter={newFilter}></Persons>
     </div>
   );
 };
