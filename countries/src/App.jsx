@@ -38,11 +38,17 @@ function App() {
           ) : filteredCountries.length > 10 ? (
             <div>Too many matches, specify another filter</div>
           ) : (
-            <ul>
+            <div style={{ padding: "10px" }}>
               {filteredCountries.map((c) => (
-                <li key={c.cca3}>{c.name.common}</li>
+                <div
+                  key={c.cca3}
+                  style={{ display: "flex", gap: "10px", alignItems: "center" }}
+                >
+                  <p>{c.name.common}</p>
+                  <button>Show</button>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </form>
       </div>
