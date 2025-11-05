@@ -4,6 +4,7 @@ import PersonForm from "./PersonForm";
 import Filter from "./Filter";
 import personsService from "./services/personsService";
 import NotificationMessage from "./components/Notification";
+import { ResponseStatus } from "./constants/constants";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -48,11 +49,25 @@ const App = () => {
             number: newNumber,
           })
           .then((response) => {
-            setNotification(`Updated ${newName}'s number`);
+            setNotification({
+              message: `Updated ${newName}'s number`,
+              responseStatus: ResponseStatus.SUCCESS,
+            });
             setTimeout(() => {
               setNotification(null);
             }, 5000);
             console.log(response);
+          })
+          .catch(() => {
+            // Revert the optimistic update
+            setPersons(persons.filter((p) => p.id !== person.id));
+            setNotification({
+              message: `Note '${newName}' was already removed from server`,
+              responseStatus: ResponseStatus.FAILURE,
+            });
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
           });
       }
     } else {
@@ -63,7 +78,10 @@ const App = () => {
           number: newNumber,
         })
         .then((response) => {
-          setNotification(`Added ${newName}`);
+          setNotification({
+            message: `Added ${newName}`,
+            responseStatus: ResponseStatus.SUCCESS,
+          });
           setTimeout(() => {
             setNotification(null);
           }, 5000);
@@ -100,7 +118,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <NotificationMessage message={notification} />
+      <NotificationMessage
+        message={notification?.message}
+        responseStatus={notification?.responseStatus}
+      />
       <Filter
         handleFilterChange={handleFilterChange}
         filter={newFilter}
