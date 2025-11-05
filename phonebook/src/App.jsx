@@ -3,12 +3,14 @@ import Persons from "./Persons";
 import PersonForm from "./PersonForm";
 import Filter from "./Filter";
 import personsService from "./services/personsService";
+import NotificationMessage from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     console.log("effect");
@@ -46,6 +48,10 @@ const App = () => {
             number: newNumber,
           })
           .then((response) => {
+            setNotification(`Updated ${newName}'s number`);
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
             console.log(response);
           });
       }
@@ -57,7 +63,14 @@ const App = () => {
           number: newNumber,
         })
         .then((response) => {
+          setNotification(`Added ${newName}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
           console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
@@ -73,23 +86,21 @@ const App = () => {
   };
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
     setNewNumber(event.target.value);
   };
 
   const handleFilterChange = (event) => {
-    console.log(event.target.value);
     setNewFilter(event.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationMessage message={notification} />
       <Filter
         handleFilterChange={handleFilterChange}
         filter={newFilter}
