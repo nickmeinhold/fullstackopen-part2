@@ -1,4 +1,4 @@
-const CountryDetails = ({ country }) => {
+const CountryDetails = ({ country, handleClose }) => {
   if (country === null) return null;
 
   const languages = Object.values(country.languages || {}); // values only
@@ -15,6 +15,7 @@ const CountryDetails = ({ country }) => {
         ))}
       </ul>
       <div style={{ fontSize: "84px" }}>{country.flag}</div>
+      <button onClick={handleClose}>close</button>
     </div>
   );
 };

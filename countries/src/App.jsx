@@ -24,11 +24,18 @@ function App() {
       .includes(countryName.trim().toLowerCase());
   });
 
+  const handleClose = () => {
+    setSelectedCountry(null);
+  };
+
   return (
     <>
       <ProgressIndicator countries={countries}></ProgressIndicator>
       <div hidden={countries.length === 0}>
-        <CountryDetails country={selectedCountry}></CountryDetails>
+        <CountryDetails
+          country={selectedCountry}
+          handleClose={handleClose}
+        ></CountryDetails>
         <form>
           <label htmlFor="countryInput">find countries </label>
           <input
