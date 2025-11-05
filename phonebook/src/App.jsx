@@ -43,11 +43,14 @@ const App = () => {
     }
   };
 
-  const deletePerson = (id) => {
-    personsService.deletePerson(id).then((response) => {
-      console.log(response);
-      setPersons(persons.filter((person) => person.id !== id));
-    });
+  const deletePerson = (personToDelete) => {
+    let userConfirmed = window.confirm(`Delete ${personToDelete.name}`);
+    if (userConfirmed) {
+      personsService.deletePerson(personToDelete.id).then((response) => {
+        console.log(response);
+        setPersons(persons.filter((person) => person.id !== personToDelete.id));
+      });
+    }
   };
 
   const handleNameChange = (event) => {
