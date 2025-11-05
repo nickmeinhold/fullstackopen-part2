@@ -1,4 +1,6 @@
 const CountryDetails = ({ country }) => {
+  if (country === null) return null;
+
   const languages = Object.values(country.languages || {}); // values only
 
   return (

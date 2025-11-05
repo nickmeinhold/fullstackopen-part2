@@ -6,6 +6,7 @@ import CountryDetails from "./components/CountryDetails";
 function App() {
   const [countryName, setCountryName] = useState("");
   const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     countriesService.getAll().then((response) => {
@@ -27,15 +28,14 @@ function App() {
     <>
       <ProgressIndicator countries={countries}></ProgressIndicator>
       <div hidden={countries.length === 0}>
+        <CountryDetails country={selectedCountry}></CountryDetails>
         <form>
           <label htmlFor="countryInput">find countries </label>
           <input
             onChange={(event) => handleCountryChange(event.target.value)}
             id="countryInput"
           ></input>
-          {filteredCountries.length == 1 ? (
-            <CountryDetails country={filteredCountries[0]}></CountryDetails>
-          ) : filteredCountries.length > 10 ? (
+          {filteredCountries.length > 10 ? (
             <div>Too many matches, specify another filter</div>
           ) : (
             <div style={{ padding: "10px" }}>
@@ -45,7 +45,9 @@ function App() {
                   style={{ display: "flex", gap: "10px", alignItems: "center" }}
                 >
                   <p>{c.name.common}</p>
-                  <button>Show</button>
+                  <button type="button" onClick={() => setSelectedCountry(c)}>
+                    Show
+                  </button>
                 </div>
               ))}
             </div>
