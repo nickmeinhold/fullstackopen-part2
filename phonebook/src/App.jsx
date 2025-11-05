@@ -19,17 +19,36 @@ const App = () => {
   }, []);
   console.log("render", persons.length, "persons");
 
-  const addPerson = (event) => {
+  const addOrUpdatePerson = (event) => {
     event.preventDefault();
 
     const nameToAdd = newName.trim();
 
-    const exists = persons.some(
+    const person = persons.find(
       (p) => p.name.trim().toLowerCase() === nameToAdd.toLowerCase()
     );
 
-    if (exists) {
-      alert(`${newName} is already added to phonebook`);
+    if (person) {
+      let confirmed = confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (confirmed) {
+        setPersons(
+          persons.map((p) =>
+            person.id === p.id
+              ? { number: newNumber, name: newName, id: p.id }
+              : p
+          )
+        );
+        personsService
+          .update(person.id, {
+            name: newName,
+            number: newNumber,
+          })
+          .then((response) => {
+            console.log(response);
+          });
+      }
     } else {
       setPersons(persons.concat({ name: newName, number: newNumber }));
       personsService
@@ -77,7 +96,7 @@ const App = () => {
       ></Filter>
       <h1>Add a new</h1>
       <PersonForm
-        addPerson={addPerson}
+        addOrUpdatePerson={addOrUpdatePerson}
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
         name={newName}
