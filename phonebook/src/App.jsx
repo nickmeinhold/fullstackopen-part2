@@ -41,9 +41,13 @@ const App = () => {
           console.log(response);
         });
     }
+  };
 
-    setNewName("");
-    setNewNumber("");
+  const deletePerson = (id) => {
+    personsService.deletePerson(id).then((response) => {
+      console.log(response);
+      setPersons(persons.filter((person) => person.id !== id));
+    });
   };
 
   const handleNameChange = (event) => {
@@ -77,7 +81,11 @@ const App = () => {
         number={newNumber}
       ></PersonForm>
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={newFilter}></Persons>
+      <Persons
+        persons={persons}
+        filter={newFilter}
+        deletePerson={deletePerson}
+      ></Persons>
     </div>
   );
 };
