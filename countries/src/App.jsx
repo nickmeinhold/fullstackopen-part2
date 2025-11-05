@@ -1,35 +1,48 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import countriesService from "./services/countries";
+import ProgressIndicator from "./components/ProgressIndicator";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [countryName, setCountryName] = useState("");
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    countriesService.getAll().then((response) => {
+      setCountries(response.data);
+    });
+  }, []);
+
+  const handleCountryChange = (countryName) => {
+    setCountryName(countryName);
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <ProgressIndicator countries={countries}></ProgressIndicator>
+      <div hidden={countries.length === 0}>
+        <form>
+          <label htmlFor="countryInput">find countries </label>
+          <input
+            onChange={(event) => handleCountryChange(event.target.value)}
+            id="countryInput"
+          ></input>
+          <div>{countryName}</div>
+          <ul>
+            {countries
+              .filter((c) => {
+                return (
+                  c.name?.common?.toLowerCase() ===
+                  countryName.trim().toLowerCase()
+                );
+              })
+              .map((c) => (
+                <li key={c.cca3}>{c.name.common}</li>
+              ))}
+          </ul>
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
