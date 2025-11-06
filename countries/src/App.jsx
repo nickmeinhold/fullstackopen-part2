@@ -32,10 +32,13 @@ function App() {
     <>
       <ProgressIndicator countries={countries}></ProgressIndicator>
       <div hidden={countries.length === 0}>
-        <CountryDetails
-          country={selectedCountry}
-          handleClose={handleClose}
-        ></CountryDetails>
+        {selectedCountry && (
+          <CountryDetails
+            key={selectedCountry.cca3 ?? selectedCountry.name?.common}
+            country={selectedCountry}
+            handleClose={handleClose}
+          />
+        )}
         <form>
           <label htmlFor="countryInput">find countries </label>
           <input
